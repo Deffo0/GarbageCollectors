@@ -94,13 +94,13 @@ public class HeapConstructor {
     }
 
     public FileWriter getDestinationFile() throws IOException {
-        FileWriter DestinationFile = null;
+        FileWriter destinationFile = null;
         try {
-            DestinationFile =  new FileWriter(paths.get(3));
+            destinationFile =  new FileWriter(paths.get(3));
         }catch (Exception e){
             System.out.println("IO Exception");
             System.exit(1);
         }
-        return DestinationFile;
+        return destinationFile;
     }
 }
