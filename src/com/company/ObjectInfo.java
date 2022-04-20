@@ -3,16 +3,16 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 
-public class objectInfo {
+public class ObjectInfo {
 
     private final int Id;
     private int memStart;
     private int memEnd;
     private boolean IsMark;
     int size;
-    private final List<objectInfo> references = new ArrayList<>();
+    private final List<ObjectInfo> references = new ArrayList<>();
 
-    public objectInfo(int identifier, int memStart, int memEnd) {
+    public ObjectInfo(int identifier, int memStart, int memEnd) {
         this.Id = identifier;
         this.memStart = memStart;
         this.memEnd = memEnd;
@@ -69,7 +69,7 @@ public class objectInfo {
     /**
      * returns current object references list
      */
-    public List<objectInfo> getRef() {
+    public List<ObjectInfo> getRef() {
         return references;
     }
 
@@ -78,7 +78,7 @@ public class objectInfo {
      *
      * @param child to be added to this object
      */
-    public void addChild(objectInfo child) {
+    public void addChild(ObjectInfo child) {
         references.add(child);
     }
 
