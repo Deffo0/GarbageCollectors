@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HeapConstructor {
-    private ArrayList<String> files_paths;
+    private ArrayList<String> paths;
     private HashMap<Integer, ObjectInfo> heap;
 
     public HeapConstructor(ArrayList<String> paths) throws Exception {
         if(paths.size() != 4){
             throw new Exception("Insufficient Arguments");
         }
-        this.files_paths = paths;
+        this.paths = paths;
         this.heap = new HashMap<>();
     }
 
     public HashMap<Integer, ObjectInfo> getHeap() throws IOException {
         try {
-            File file = new File(files_paths.get(0));
+            File file = new File(paths.get(0));
             FileReader fr = new FileReader(file);
             BufferedReader parser = new BufferedReader(fr);
             String lineHolder;
@@ -46,7 +46,7 @@ public class HeapConstructor {
     public ArrayList<Integer> getRoots() throws IOException {
         ArrayList<Integer> roots = new ArrayList<>();
         try {
-            File file = new File(files_paths.get(1));
+            File file = new File(paths.get(1));
             FileReader fr = new FileReader(file);
             BufferedReader parser = new BufferedReader(fr);
             String lineHolder;
@@ -71,7 +71,7 @@ public class HeapConstructor {
     public void readPointers() throws IOException {
 
         try {
-            File file = new File(files_paths.get(2));
+            File file = new File(paths.get(2));
             FileReader fr = new FileReader(file);
             BufferedReader parser = new BufferedReader(fr);
             String lineHolder;
@@ -96,7 +96,7 @@ public class HeapConstructor {
     public FileWriter getDestinationFile() throws IOException {
         FileWriter DestinationFile = null;
         try {
-            DestinationFile =  new FileWriter(files_paths.get(3));
+            DestinationFile =  new FileWriter(paths.get(3));
         }catch (Exception e){
             System.out.println("IO Exception");
             System.exit(1);
