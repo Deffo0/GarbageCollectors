@@ -85,8 +85,8 @@ public class ObjectInfo {
     /**
      * Returns the result objects as a string
      */
-    public String toString() {
-        return Id + "," + memStart + "," + memEnd;
+    public String toCSVLine() {
+        return Id + "," + memStart + "," + memEnd + "\n" ;
     }
 }
 

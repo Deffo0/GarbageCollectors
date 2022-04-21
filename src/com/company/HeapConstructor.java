@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HeapConstructor {
-    private String[] paths;
+    private final String[] paths;
     private HashMap<Integer, ObjectInfo> heap;
 
     public HeapConstructor(String[] paths) throws Exception {
         if (paths.length != 4) {
-            System.out.println("Insufficient Arguments");
-            System.exit(1);
+            throw new Exception("Insufficient Arguments");
         }
         this.paths = paths;
         this.heap = new HashMap<>();
