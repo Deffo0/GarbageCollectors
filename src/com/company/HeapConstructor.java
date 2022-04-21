@@ -89,7 +89,7 @@ public class HeapConstructor {
             try {
                 while ((lineHolder = parser.readLine()) != null) {
                     bucketsHolder = lineHolder.split(",");
-                    this.heap.get(Integer.parseInt(bucketsHolder[0])).addChild(heap.get(Integer.parseInt(bucketsHolder[0])));
+                    this.heap.get(Integer.parseInt(bucketsHolder[0])).addChild(heap.get(Integer.parseInt(bucketsHolder[1])));
                 }
             } catch (Exception readLineException) {
                 System.out.println("ReadLine Exception");
@@ -105,10 +105,10 @@ public class HeapConstructor {
     /**
      * @return FileWriter object for the Destination file
      */
-    public FileWriter getDestinationFile() throws IOException {
+    public FileWriter getDestinationFile(String fileName) throws IOException {
         FileWriter destinationFile = null;
         try {
-            destinationFile = new FileWriter(paths[3]);
+            destinationFile = new FileWriter(paths[3] +"\\"+ fileName);
         } catch (Exception e) {
             System.out.println("IO Exception");
             System.exit(1);

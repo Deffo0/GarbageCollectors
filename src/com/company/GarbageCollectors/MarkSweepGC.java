@@ -10,41 +10,47 @@ import java.util.HashMap;
 
 public class MarkSweepGC {
 
-    public static void mark(ArrayList<Integer> roots, HashMap<Integer, ObjectInfo> heap) {
-        ArrayList<Integer> markedObjects = new ArrayList<>();
-        for (int root : roots) {
-            for (ObjectInfo reference : heap.get(root).getRef()) {
-                reference.setMarked();
-            }
+
+    public static void mark(ArrayList<ObjectInfo> roots) {
+        for (ObjectInfo root : roots) {
+            root.setMarked();
+            mark(root.getRef());
         }
     }
 
     public static void sweep(HashMap<Integer, ObjectInfo> heap){
-        heap.forEach((id,objectInfo) -> {
-            if(!objectInfo.isMarked()){
-                heap.remove(id);
+        ArrayList<Integer> unmarkedObjects = new ArrayList<>();
+        for (int id:heap.keySet()) {
+            if(!heap.get(id).isMarked()){
+                unmarkedObjects.add(id);
             }
-        });
+        }
+        for (int unmarkedObject:unmarkedObjects) {
+            heap.remove(unmarkedObject);
+        }
     }
 
     public static void writeOut(FileWriter destinationFile,HashMap<Integer, ObjectInfo> heap) throws IOException {
         StringBuilder sb = new StringBuilder();
-        heap.forEach((id,objectInfo) -> {
-            sb.append(objectInfo.toCSVLine());
-        });
+        for (int id:heap.keySet()) {
+            sb.append(heap.get(id).toCSVLine());
+        }
         destinationFile.write(sb.toString());
+        destinationFile.close();
     }
 
     public static void main(String[] args) throws Exception {
-        HashMap<Integer, ObjectInfo> heap;
-        ArrayList<Integer> roots;
+        HashMap<Integer, ObjectInfo> heap ;
+        ArrayList<ObjectInfo> roots = new ArrayList<>();
         FileWriter destinationFile;
         try {
             HeapConstructor heapConstructor = new HeapConstructor(args);
             heap = heapConstructor.getHeap();
-            roots = heapConstructor.getRoots();
-            destinationFile = heapConstructor.getDestinationFile();
-            mark(roots, heap);
+            for (int id:heapConstructor.getRoots()) {
+                roots.add(heap.get(id));
+            };
+            destinationFile = heapConstructor.getDestinationFile("MarkSweepGC.csv");
+            mark(roots);
             sweep(heap);
             writeOut(destinationFile, heap);
         }catch (Exception e){

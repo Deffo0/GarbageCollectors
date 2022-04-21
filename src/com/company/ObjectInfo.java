@@ -10,7 +10,7 @@ public class ObjectInfo {
     private int memEnd;
     private boolean IsMark;
     int size;
-    private final List<ObjectInfo> references = new ArrayList<>();
+    private final ArrayList<ObjectInfo> references = new ArrayList<>();
 
     public ObjectInfo(int identifier, int memStart, int memEnd) {
         this.Id = identifier;
@@ -69,7 +69,7 @@ public class ObjectInfo {
     /**
      * returns current object references list
      */
-    public List<ObjectInfo> getRef() {
+    public ArrayList<ObjectInfo> getRef() {
         return references;
     }
 

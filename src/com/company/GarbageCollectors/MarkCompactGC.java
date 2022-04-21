@@ -16,7 +16,7 @@ public class MarkCompactGC {
             HeapConstructor heapConstructor = new HeapConstructor(args);
             heap = heapConstructor.getHeap();
             roots = heapConstructor.getRoots();
-            destinationFile = heapConstructor.getDestinationFile();
+            destinationFile = heapConstructor.getDestinationFile("MarkCompactGC.csv");
         }catch (Exception e){
             System.out.println(e.getMessage());
             System.exit(1);

@@ -21,7 +21,7 @@ public class CopyGC {
             HeapConstructor heapConstructor = new HeapConstructor(args);
             heap = heapConstructor.getHeap();
             roots = heapConstructor.getRoots();
-            destinationFile = heapConstructor.getDestinationFile();
+            destinationFile = heapConstructor.getDestinationFile("CopyGC.csv");
             List<ObjectInfo> CleanedList;
 
             CleanedList = CheneyAlgo(roots, heap);
