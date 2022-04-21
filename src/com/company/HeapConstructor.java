@@ -1,4 +1,5 @@
 package com.company;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,13 +9,17 @@ public class HeapConstructor {
     private HashMap<Integer, ObjectInfo> heap;
 
     public HeapConstructor(String[] paths) throws Exception {
-        if(paths.length != 4){
-            throw new Exception("Insufficient Arguments");
+        if (paths.length != 4) {
+            System.out.println("Insufficient Arguments");
+            System.exit(1);
         }
         this.paths = paths;
         this.heap = new HashMap<>();
     }
 
+    /**
+    @return heap hashMap each entry is an identifier to an object and its value is the object itself
+     */
     public HashMap<Integer, ObjectInfo> getHeap() throws IOException {
         try {
             File file = new File(paths[0]);
@@ -26,15 +31,15 @@ public class HeapConstructor {
             try {
                 while ((lineHolder = parser.readLine()) != null) {
                     bucketsHolder = lineHolder.split(",");
-                    ObjectInfo objectInfo = new ObjectInfo(Integer.parseInt(bucketsHolder[0]), Integer.parseInt(bucketsHolder[1]) ,Integer.parseInt(bucketsHolder[2]));
+                    ObjectInfo objectInfo = new ObjectInfo(Integer.parseInt(bucketsHolder[0]), Integer.parseInt(bucketsHolder[1]), Integer.parseInt(bucketsHolder[2]));
                     this.heap.put(objectInfo.getId(), objectInfo);
                 }
-            }catch (Exception readLineException) {
+            } catch (Exception readLineException) {
                 System.out.println("ReadLine Exception");
                 System.exit(1);
             }
             parser.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("IO Exception");
             System.exit(1);
         }
@@ -43,6 +48,9 @@ public class HeapConstructor {
         return this.heap;
     }
 
+    /**
+     @return the roots objects identifiers on the heap
+     */
     public ArrayList<Integer> getRoots() throws IOException {
         ArrayList<Integer> roots = new ArrayList<>();
         try {
@@ -55,12 +63,12 @@ public class HeapConstructor {
                 while ((lineHolder = parser.readLine()) != null) {
                     roots.add(Integer.parseInt(lineHolder));
                 }
-            }catch (Exception readLineException) {
+            } catch (Exception readLineException) {
                 System.out.println("ReadLine Exception");
                 System.exit(1);
             }
             parser.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("IO Exception");
             System.exit(1);
         }
@@ -68,8 +76,10 @@ public class HeapConstructor {
         return roots;
     }
 
+    /**
+     * @function modify the hierarchy between objects in heap according to the pointers file
+     */
     public void readPointers() throws IOException {
-
         try {
             File file = new File(paths[2]);
             FileReader fr = new FileReader(file);
@@ -82,22 +92,25 @@ public class HeapConstructor {
                     bucketsHolder = lineHolder.split(",");
                     this.heap.get(Integer.parseInt(bucketsHolder[0])).addChild(heap.get(Integer.parseInt(bucketsHolder[0])));
                 }
-            }catch (Exception readLineException) {
+            } catch (Exception readLineException) {
                 System.out.println("ReadLine Exception");
                 System.exit(1);
             }
             parser.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("IO Exception");
             System.exit(1);
         }
     }
 
+    /**
+     * @return FileWriter object for the Destination file
+     */
     public FileWriter getDestinationFile() throws IOException {
         FileWriter destinationFile = null;
         try {
-            destinationFile =  new FileWriter(paths[3]);
-        }catch (Exception e){
+            destinationFile = new FileWriter(paths[3]);
+        } catch (Exception e) {
             System.out.println("IO Exception");
             System.exit(1);
         }

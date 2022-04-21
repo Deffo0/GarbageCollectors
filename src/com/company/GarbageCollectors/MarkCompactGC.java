@@ -1,10 +1,13 @@
-package com.company;
+package com.company.GarbageCollectors;
+
+import com.company.HeapConstructor;
+import com.company.ObjectInfo;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MarkSweepGC {
+public class MarkCompactGC {
     public static void main(String[] args) throws Exception {
         HashMap<Integer, ObjectInfo> heap;
         ArrayList<Integer> roots;

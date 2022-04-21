@@ -1,4 +1,7 @@
-package com.company;
+package com.company.GarbageCollectors;
+
+import com.company.HeapConstructor;
+import com.company.ObjectInfo;
 
 import java.io.FileWriter;
 import java.io.IOException;
