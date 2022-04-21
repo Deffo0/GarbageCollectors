@@ -18,7 +18,7 @@ public class HeapConstructor {
     }
 
     /**
-    @return heap hashMap each entry is an identifier to an object and its value is the object itself
+     * @return heap hashMap, each entry is an identifier to an object and its value is the object itself
      */
     public HashMap<Integer, ObjectInfo> getHeap() throws IOException {
         try {
@@ -49,7 +49,7 @@ public class HeapConstructor {
     }
 
     /**
-     @return the roots objects identifiers on the heap
+     * @return the roots objects identifiers on the heap
      */
     public ArrayList<Integer> getRoots() throws IOException {
         ArrayList<Integer> roots = new ArrayList<>();
