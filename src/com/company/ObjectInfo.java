@@ -40,6 +40,13 @@ public class ObjectInfo {
     public int getMemEnd() {
         return memEnd;
     }
+    
+    /**
+     * returns size of the object
+     */
+    public int getSize() {
+        return size;
+    }
 
     /**
      * function shifts the object's memory bounds to given index
