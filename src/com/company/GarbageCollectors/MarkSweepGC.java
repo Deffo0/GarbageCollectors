@@ -48,7 +48,7 @@ public class MarkSweepGC {
             heap = heapConstructor.getHeap();
             for (int id:heapConstructor.getRoots()) {
                 roots.add(heap.get(id));
-            };
+            }
             destinationFile = heapConstructor.getDestinationFile("MarkSweepGC.csv");
             mark(roots);
             sweep(heap);

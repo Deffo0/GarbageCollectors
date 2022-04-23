@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class HeapConstructor {
@@ -10,6 +11,7 @@ public class HeapConstructor {
 
     public HeapConstructor(String[] paths) throws Exception {
         if (paths.length != 4) {
+            System.out.println("paths length " + Arrays.toString(paths));
             throw new Exception("Insufficient Arguments");
         }
         this.paths = paths;
