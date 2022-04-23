@@ -36,7 +36,6 @@ public class CopyGC {
 
     }
 
-
     private static List<ObjectInfo> CheneyAlgo(List<Integer> roots, HashMap<Integer, ObjectInfo> GarbageHeap) {
         List<ObjectInfo> CleanedHeap = new ArrayList<>();
 
@@ -66,6 +65,8 @@ public class CopyGC {
 
         return CleanedHeap;
     }
+
+
 
     public static void writeOut(FileWriter destinationFile,List<ObjectInfo> CleanedList) throws IOException {
 

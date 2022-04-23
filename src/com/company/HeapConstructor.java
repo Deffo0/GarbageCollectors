@@ -110,9 +110,10 @@ public class HeapConstructor {
     public FileWriter getDestinationFile(String fileName) throws IOException {
         FileWriter destinationFile = null;
         try {
+            System.out.println(paths[3]);
             destinationFile = new FileWriter(paths[3] +"\\"+ fileName);
         } catch (Exception e) {
-            System.out.println("IO Exception");
+            System.out.println("IO Exceptio3n");
             System.exit(1);
         }
         return destinationFile;

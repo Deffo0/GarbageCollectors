@@ -38,7 +38,7 @@ public class MarkCompactGC {
         destinationFile.close();
     }
 
-    private static List<ObjectInfo> CheneyAlgo(List<Integer> roots, HashMap<Integer, ObjectInfo> GarbageHeap) {
+    private static List<ObjectInfo> compact(List<Integer> roots, HashMap<Integer, ObjectInfo> GarbageHeap) {
         List<ObjectInfo> CleanedHeap = new ArrayList<>();
 
         int nextIndex = 0;
@@ -48,21 +48,9 @@ public class MarkCompactGC {
 
         for (Integer ID : roots) {
             ObjectInfo MemObj = GarbageHeap.get(ID);
-            if (MemObj.isMarked()) continue;
             nextIndex = MemObj.move(nextIndex);
             CleanedHeap.add(MemObj);
             MemObj.setMarked();
-        }
-
-        for (int i = 0; i < CleanedHeap.size(); i++) {
-            ObjectInfo parent = CleanedHeap.get(i);
-
-            for (ObjectInfo child : parent.getRef()) {
-                if (child.isMarked()) continue;
-                nextIndex = child.move(nextIndex);
-                CleanedHeap.add(child);
-                child.setMarked();
-            }
         }
 
         return CleanedHeap;
@@ -83,7 +71,7 @@ public class MarkCompactGC {
             }
             mark(roots_objects);
             sweep(heap);
-            CheneyAlgo(roots, heap);
+            compact(roots, heap);
             writeOut(destinationFile, heap);
         }catch (Exception e){
             System.out.println(e.getMessage());
