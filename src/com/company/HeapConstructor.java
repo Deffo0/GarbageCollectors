@@ -11,7 +11,6 @@ public class HeapConstructor {
 
     public HeapConstructor(String[] paths) throws Exception {
         if (paths.length != 4) {
-            System.out.println("paths length " + Arrays.toString(paths));
             throw new Exception("Insufficient Arguments");
         }
         this.paths = paths;
@@ -21,7 +20,7 @@ public class HeapConstructor {
     /**
      * @return heap hashMap, each entry is an identifier to an object and its value is the object itself
      */
-    public HashMap<Integer, ObjectInfo> getHeap() throws IOException {
+    public HashMap<Integer, ObjectInfo> getHeap() {
         try {
             File file = new File(paths[0]);
             FileReader fr = new FileReader(file);
@@ -52,7 +51,7 @@ public class HeapConstructor {
     /**
      * @return the roots objects identifiers on the heap
      */
-    public ArrayList<Integer> getRoots() throws IOException {
+    public ArrayList<Integer> getRoots() {
         ArrayList<Integer> roots = new ArrayList<>();
         try {
             File file = new File(paths[1]);
@@ -80,7 +79,7 @@ public class HeapConstructor {
     /**
      * @function modify the hierarchy between objects in heap according to the pointers file
      */
-    public void readPointers() throws IOException {
+    public void readPointers() {
         try {
             File file = new File(paths[2]);
             FileReader fr = new FileReader(file);
@@ -107,13 +106,12 @@ public class HeapConstructor {
     /**
      * @return FileWriter object for the Destination file
      */
-    public FileWriter getDestinationFile(String fileName) throws IOException {
+    public FileWriter getDestinationFile(String fileName) {
         FileWriter destinationFile = null;
         try {
-            System.out.println(paths[3]);
             destinationFile = new FileWriter(paths[3] +"\\"+ fileName);
         } catch (Exception e) {
-            System.out.println("IO Exceptio3n");
+            System.out.println("IO Exception");
             System.exit(1);
         }
         return destinationFile;

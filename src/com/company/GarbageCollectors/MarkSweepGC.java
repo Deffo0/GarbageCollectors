@@ -11,14 +11,17 @@ import java.util.HashMap;
 public class MarkSweepGC {
 
 
-    public static void mark(ArrayList<ObjectInfo> roots) {
+    private static void mark(ArrayList<ObjectInfo> roots) {
         for (ObjectInfo root : roots) {
+            if(root.isMarked()){
+                continue;
+            }
             root.setMarked();
             mark(root.getRef());
         }
     }
 
-    public static void sweep(HashMap<Integer, ObjectInfo> heap){
+    private static void sweep(HashMap<Integer, ObjectInfo> heap){
         ArrayList<Integer> unmarkedObjects = new ArrayList<>();
         for (int id:heap.keySet()) {
             if(!heap.get(id).isMarked()){
@@ -30,7 +33,7 @@ public class MarkSweepGC {
         }
     }
 
-    public static void writeOut(FileWriter destinationFile,HashMap<Integer, ObjectInfo> heap) throws IOException {
+    private static void writeOut(FileWriter destinationFile,HashMap<Integer, ObjectInfo> heap) throws IOException {
         StringBuilder sb = new StringBuilder();
         for (int id:heap.keySet()) {
             sb.append(heap.get(id).toCSVLine());

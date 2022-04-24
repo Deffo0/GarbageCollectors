@@ -12,6 +12,9 @@ import java.util.List;
 public class MarkCompactGC {
     public static void mark(ArrayList<ObjectInfo> roots) {
         for (ObjectInfo root : roots) {
+            if(root.isMarked()){
+                continue;
+            }
             root.setMarked();
             mark(root.getRef());
         }

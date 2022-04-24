@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MarkSweepGC:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MarkSweepGC_jar</output-path>
+    <root id="archive" name="MarkSweepGC.jar">
+      <element id="module-output" name="Garbage Collectors" />
+    </root>
+  </artifact>
+</component>
