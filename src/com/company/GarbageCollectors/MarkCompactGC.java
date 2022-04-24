@@ -41,16 +41,15 @@ public class MarkCompactGC {
         destinationFile.close();
     }
 
-    private static List<ObjectInfo> compact(List<Integer> roots, HashMap<Integer, ObjectInfo> GarbageHeap) {
+    private static List<ObjectInfo> compact(HashMap<Integer, ObjectInfo> GarbageHeap) {
         List<ObjectInfo> CleanedHeap = new ArrayList<>();
 
         int nextIndex = 0;
 
-        if (roots.isEmpty()) return CleanedHeap;
+        if (GarbageHeap.isEmpty()) return CleanedHeap;
 
 
-        for (Integer ID : roots) {
-            ObjectInfo MemObj = GarbageHeap.get(ID);
+        for (ObjectInfo MemObj : GarbageHeap.values()) {
             nextIndex = MemObj.move(nextIndex);
             CleanedHeap.add(MemObj);
             MemObj.setMarked();
@@ -74,7 +73,7 @@ public class MarkCompactGC {
             }
             mark(roots_objects);
             sweep(heap);
-            compact(roots, heap);
+            compact(heap);
             writeOut(destinationFile, heap);
         }catch (Exception e){
             System.out.println(e.getMessage());
