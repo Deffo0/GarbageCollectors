@@ -17,7 +17,7 @@ public class ObjectInfo {
         this.memStart = memStart;
         this.memEnd = memEnd;
         this.IsMark = false;
-        this.size = memEnd - memStart;
+        this.size = memEnd - memStart + 1;
     }
 
     /**

@@ -2,12 +2,10 @@ package com.company.GarbageCollectors;
 
 import com.company.HeapConstructor;
 import com.company.ObjectInfo;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -17,7 +15,8 @@ public class G1GC {
 	static private HashMap<Integer, Integer> regionIndex = new HashMap<>();
 	static PriorityQueue<ObjectInfo> activeObjects;
 	static private int regionSize;
-	static int regions[];
+	static int availableSpaceInEachRegion[];
+	static int numOfObjectsInEachRegion[];
 
 	public static void main(String[] args) throws Exception {
 		HashMap<Integer, ObjectInfo> heap;
@@ -36,7 +35,8 @@ public class G1GC {
 		try {
 			int totalSize = Integer.parseInt(args[0]);
 			regionSize = totalSize / numOfRegions;
-			regions = new int[numOfRegions + 1];
+			availableSpaceInEachRegion = new int[numOfRegions + 1];
+			numOfObjectsInEachRegion = new int[numOfRegions + 1];
 			String[] files = Arrays.copyOfRange(args, 1, args.length);
 			HeapConstructor heapConstructor = new HeapConstructor(files);
 			heap = heapConstructor.getHeap();
@@ -47,17 +47,17 @@ public class G1GC {
 			destinationFile = heapConstructor.getDestinationFile("G1GC.csv");
 			setRegions(heap);
 			markAndSweep(heap, roots, isOccupiedRegion);
-			defragment(heap);
+			heap = defragment(heap);
 			writeOut(destinationFile, heap);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
-		System.out.println("Done");
+		System.out.println("Done G1 GC");
 	}
 
-	private static void defragment(HashMap<Integer, ObjectInfo> heap) {
-		// TODO Auto-generated method stub
+	private static HashMap<Integer, ObjectInfo> defragment(HashMap<Integer, ObjectInfo> heap) {
+		heap = new HashMap<>();
 		int startIndex = getStartIndex();
 		int currentIndex = startIndex;
 		while (!activeObjects.isEmpty()) {
@@ -67,21 +67,22 @@ public class G1GC {
 			ObjectInfo obj = activeObjects.peek();
 			int regionNumber = getObjectRegion(obj.getMemStart());
 			int objSize = obj.getSize();
-			if (objSize <= regions[currentIndex] || regionNumber == currentIndex) {
-				moveObject(obj, regions, regionNumber, currentIndex, regionSize);
+			if (objSize <= availableSpaceInEachRegion[currentIndex] && regionNumber != currentIndex) {
+				moveObject(obj, availableSpaceInEachRegion, regionNumber, currentIndex, regionSize);
 				currentIndex = startIndex;
-				activeObjects.remove();
+				ObjectInfo active = activeObjects.remove();
+				heap.put(active.getId(), active);
 				continue;
 			}
 			currentIndex++;
 		}
+		return heap;
 	}
 
 	private static int getStartIndex() {
-		// TODO Auto-generated method stub
 		int start = 1;
 		for (int i = 1; i < numOfRegions; i++) {
-			if (regions[i] == regionSize) {
+			if (availableSpaceInEachRegion[i] == regionSize) {
 				start = i;
 				break;
 			}
@@ -99,28 +100,29 @@ public class G1GC {
 	}
 
 	private static void moveObject(ObjectInfo obj, int[] regions, int regionNumber, int currentIndex, int regionSize) {
-		// TODO Auto-generated method stub
 		int newStartMem = (currentIndex - 1) * regionSize + (regionSize - regions[currentIndex]);
 		obj.move(newStartMem);
+		numOfObjectsInEachRegion[regionNumber]--;
+		numOfObjectsInEachRegion[currentIndex]++;
 		regions[regionNumber] += obj.getSize();
 		regions[currentIndex] -= obj.getSize();
+		if (numOfObjectsInEachRegion[regionNumber] == 0) {
+			regions[regionNumber] = regionSize;
+		}
 	}
 
 	private static void setRegions(HashMap<Integer, ObjectInfo> heap) {
-		// TODO Auto-generated method stub
-		Arrays.fill(regions, regionSize);
+		Arrays.fill(availableSpaceInEachRegion, regionSize);
 		for (ObjectInfo object : heap.values()) {
-			//
 			int region = getObjectRegion(object.getMemStart());
 			regionIndex.put(object.getId(), region);
-			regions[region] -= object.getSize();
+			availableSpaceInEachRegion[region] -= object.getSize();
 		}
-
 	}
 
 	private static int getObjectRegion(int memStart) {
 		int regionNum = (int) Math.ceil((double) memStart / regionSize);
-		if (memStart % numOfRegions == 0) {
+		if (memStart % regionSize == 0) {
 			regionNum++;
 		}
 		return regionNum;
@@ -128,7 +130,6 @@ public class G1GC {
 
 	private static void markAndSweep(HashMap<Integer, ObjectInfo> heap, ArrayList<ObjectInfo> roots,
 			boolean[] isOccupiedRegion) {
-		// TODO Auto-generated method stub
 		mark(roots, isOccupiedRegion);
 		sweep(heap, isOccupiedRegion);
 	}
@@ -136,7 +137,7 @@ public class G1GC {
 	public static void mark(ArrayList<ObjectInfo> roots, boolean[] isOccupiedRegion) {
 		for (ObjectInfo root : roots) {
 			if (root.isMarked()) {
-				return;
+				continue;
 			}
 			root.setMarked();
 			isOccupiedRegion[regionIndex.get(root.getId())] = true;
@@ -145,15 +146,15 @@ public class G1GC {
 	}
 
 	public static void sweep(HashMap<Integer, ObjectInfo> heap, boolean[] isOccupiedRegion) {
-
 		ArrayList<Integer> unmarkedObjects = new ArrayList<>();
-
 		for (ObjectInfo object : heap.values()) {
-			if (!isOccupiedRegion[regionIndex.get(object.getId())]) {
+			int region = regionIndex.get(object.getId());
+			if (!isOccupiedRegion[region]) {
 				unmarkedObjects.add(object.getId());
-				regions[regionIndex.get(object.getId())] = regionSize;
-			} else {
+				availableSpaceInEachRegion[region] = regionSize;
+			} else if (object.isMarked()) {
 				activeObjects.add(object);
+				numOfObjectsInEachRegion[region]++;
 			}
 		}
 		for (int unmarkedObject : unmarkedObjects) {
