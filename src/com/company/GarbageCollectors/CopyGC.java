@@ -2,7 +2,6 @@ package com.company.GarbageCollectors;
 
 import com.company.HeapConstructor;
 import com.company.ObjectInfo;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CopyGC {
-
 
     public static void main(String[] args) {
         HashMap<Integer, ObjectInfo> heap;

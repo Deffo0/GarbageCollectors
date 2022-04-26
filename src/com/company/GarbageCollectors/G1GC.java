@@ -21,6 +21,7 @@ public class G1GC {
 	public static void main(String[] args) throws Exception {
 		HashMap<Integer, ObjectInfo> heap;
 		ArrayList<ObjectInfo> roots = new ArrayList<>();
+		ArrayList<ObjectInfo> out = new ArrayList<>();
 		FileWriter destinationFile;
 		activeObjects = new PriorityQueue<>(2, new Comparator<ObjectInfo>() {
 			@Override
@@ -47,8 +48,8 @@ public class G1GC {
 			destinationFile = heapConstructor.getDestinationFile("G1GC.csv");
 			setRegions(heap);
 			markAndSweep(heap, roots, isOccupiedRegion);
-			heap = defragment(heap);
-			writeOut(destinationFile, heap);
+			out = defragment(heap);
+			writeOut(destinationFile, out);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
@@ -56,27 +57,35 @@ public class G1GC {
 		System.out.println("Done G1 GC");
 	}
 
-	private static HashMap<Integer, ObjectInfo> defragment(HashMap<Integer, ObjectInfo> heap) {
-		heap = new HashMap<>();
+	private static ArrayList<ObjectInfo> defragment(HashMap<Integer, ObjectInfo> heap) {
+		ArrayList<ObjectInfo> output = new ArrayList<>();
 		int startIndex = getStartIndex();
 		int currentIndex = startIndex;
+		int numOfChecks = 0;
 		while (!activeObjects.isEmpty()) {
 			if (currentIndex > numOfRegions) {
 				currentIndex = 1;
 			}
+			if (numOfChecks > numOfRegions) {
+				System.out.println("NO PLACE FOR THE CURRENT ACTIVE OBJECT!!");
+				System.exit(-1);
+			}
+
 			ObjectInfo obj = activeObjects.peek();
 			int regionNumber = getObjectRegion(obj.getMemStart());
 			int objSize = obj.getSize();
 			if (objSize <= availableSpaceInEachRegion[currentIndex] && regionNumber != currentIndex) {
 				moveObject(obj, availableSpaceInEachRegion, regionNumber, currentIndex, regionSize);
 				currentIndex = startIndex;
+				numOfChecks = 0;
 				ObjectInfo active = activeObjects.remove();
-				heap.put(active.getId(), active);
+				output.add(active);
 				continue;
 			}
+			numOfChecks++;
 			currentIndex++;
 		}
-		return heap;
+		return output;
 	}
 
 	private static int getStartIndex() {
@@ -90,13 +99,13 @@ public class G1GC {
 		return start;
 	}
 
-	private static void writeOut(FileWriter destinationFile, HashMap<Integer, ObjectInfo> heap) throws IOException {
+	private static void writeOut(FileWriter destinationFile, ArrayList<ObjectInfo> heap) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		for (int id : heap.keySet()) {
-			sb.append(heap.get(id).toCSVLine());
-		}
-		destinationFile.write(sb.toString());
-		destinationFile.close();
+        for (ObjectInfo objectInfo:heap) {
+            sb.append(objectInfo.toCSVLine());
+        }
+        destinationFile.write(sb.toString());
+        destinationFile.close();
 	}
 
 	private static void moveObject(ObjectInfo obj, int[] regions, int regionNumber, int currentIndex, int regionSize) {

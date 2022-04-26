@@ -109,7 +109,7 @@ public class HeapConstructor {
     public FileWriter getDestinationFile(String fileName) {
         FileWriter destinationFile = null;
         try {
-            destinationFile = new FileWriter(paths[3] +"\\"+ fileName);
+            destinationFile = new FileWriter(paths[3] +"/"+ fileName);
         } catch (Exception e) {
             System.out.println("IO Exception");
             System.exit(1);
