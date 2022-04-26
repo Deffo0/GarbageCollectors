@@ -12,7 +12,7 @@ import java.util.List;
 public class CopyGC {
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         HashMap<Integer, ObjectInfo> heap;
         ArrayList<Integer> roots;
         FileWriter destinationFile;

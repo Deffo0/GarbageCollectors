@@ -6,6 +6,7 @@ import com.company.ObjectInfo;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class MarkSweepGC {
@@ -34,15 +35,20 @@ public class MarkSweepGC {
     }
 
     private static void writeOut(FileWriter destinationFile,HashMap<Integer, ObjectInfo> heap) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        ArrayList<ObjectInfo> sortedHeap = new ArrayList<>();
         for (int id:heap.keySet()) {
-            sb.append(heap.get(id).toCSVLine());
+            sortedHeap.add(heap.get(id));
+        }
+        sortedHeap.sort(Comparator.comparingInt(ObjectInfo::getMemStart));
+        StringBuilder sb = new StringBuilder();
+        for (ObjectInfo objectInfo:sortedHeap) {
+            sb.append(objectInfo.toCSVLine());
         }
         destinationFile.write(sb.toString());
         destinationFile.close();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         HashMap<Integer, ObjectInfo> heap ;
         ArrayList<ObjectInfo> roots = new ArrayList<>();
         FileWriter destinationFile;

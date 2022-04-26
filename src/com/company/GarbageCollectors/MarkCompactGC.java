@@ -6,6 +6,7 @@ import com.company.ObjectInfo;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,10 +33,10 @@ public class MarkCompactGC {
         }
     }
 
-    public static void writeOut(FileWriter destinationFile,HashMap<Integer, ObjectInfo> heap) throws IOException {
+    public static void writeOut(FileWriter destinationFile,List <ObjectInfo> heap) throws IOException {
         StringBuilder sb = new StringBuilder();
-        for (int id:heap.keySet()) {
-            sb.append(heap.get(id).toCSVLine());
+        for (ObjectInfo objectInfo:heap) {
+            sb.append(objectInfo.toCSVLine());
         }
         destinationFile.write(sb.toString());
         destinationFile.close();
@@ -43,13 +44,16 @@ public class MarkCompactGC {
 
     private static List<ObjectInfo> compact(HashMap<Integer, ObjectInfo> GarbageHeap) {
         List<ObjectInfo> CleanedHeap = new ArrayList<>();
-
+        ArrayList<ObjectInfo> sortedHeap = new ArrayList<>();
         int nextIndex = 0;
-
         if (GarbageHeap.isEmpty()) return CleanedHeap;
 
+        for (int id:GarbageHeap.keySet()) {
+            sortedHeap.add(GarbageHeap.get(id));
+        }
+        sortedHeap.sort(Comparator.comparingInt(ObjectInfo::getMemStart));
 
-        for (ObjectInfo MemObj : GarbageHeap.values()) {
+        for (ObjectInfo MemObj : sortedHeap) {
             nextIndex = MemObj.move(nextIndex);
             CleanedHeap.add(MemObj);
             MemObj.setMarked();
@@ -58,23 +62,22 @@ public class MarkCompactGC {
         return CleanedHeap;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         HashMap<Integer, ObjectInfo> heap ;
-        ArrayList<Integer> roots ;
         ArrayList<ObjectInfo> roots_objects  = new ArrayList<>();
         FileWriter destinationFile;
+        List<ObjectInfo> compactedHeap;
         try {
             HeapConstructor heapConstructor = new HeapConstructor(args);
             heap = heapConstructor.getHeap();
-            roots = heapConstructor.getRoots();
             destinationFile = heapConstructor.getDestinationFile("MarkCompactGC.csv");
             for (int id:heapConstructor.getRoots()) {
                 roots_objects.add(heap.get(id));
             }
             mark(roots_objects);
             sweep(heap);
-            compact(heap);
-            writeOut(destinationFile, heap);
+            compactedHeap = compact(heap);
+            writeOut(destinationFile, compactedHeap);
         }catch (Exception e){
             System.out.println(e.getMessage());
             System.exit(1);
