@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MarkCompactGC:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MarkCompactGC_jar</output-path>
+    <root id="archive" name="MarkCompactGC.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MarkCompactGC/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Garbage Collectors" />
+    </root>
+  </artifact>
+</component>
