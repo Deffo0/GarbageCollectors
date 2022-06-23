@@ -19,7 +19,7 @@
 1. Path of the heap csv file.
 1. Path of the pointers csv file.
 1. Path of the root objects txt file.
-1. Path for the output file to be placed in.
+1. Path for the output files to be placed in.
 
 Heap csv file Example:
 | Object ID | Start Address| End Address |
