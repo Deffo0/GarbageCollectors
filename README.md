@@ -50,4 +50,4 @@ Root txt file Example:
 | `HeapConstructor` | Constructs the heap by traversing the csv files and makes appropriate links between objects |
 ---
 ## Test
-+ it was generated on number of corners cases for the allocation graph of the heap and its objects.
++ It was generated on number of corners cases for the allocation graph of the heap and its objects.
