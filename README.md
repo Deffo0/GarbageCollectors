@@ -6,7 +6,7 @@
 - [Test](#Test)
 ---
 ## Overview
-+ Complelte implementation provided as JAR files resident in `GarbageCollectors/out/artifacts/` for 4 types of garbage collectors:
++ Complete implementation provided as JAR files resident in `GarbageCollectors/out/artifacts/` for 4 types of garbage collectors:
   - Mark & Sweep GC.
   - Mark & Compact GC.
   - Copy GC.
