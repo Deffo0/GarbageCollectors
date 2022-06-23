@@ -12,7 +12,7 @@
   - Copy GC.
   - G1 GC.
 + What is the garbage collector?
->garbage collector manages the allocation and release of memory for an application. For developers working with managed code, this means that you don't have to write code to perform memory management tasks. Automatic memory management can eliminate common problems.
+>Garbage collector manages the allocation and release of memory for an application. For developers working with managed code, this means that you don't have to write code to perform memory management tasks. Automatic memory management can eliminate common problems.
 ---
 ## JAR Arguments
 
@@ -50,4 +50,4 @@ Root txt file Example:
 | `HeapConstructor` | Constructs the heap by traversing the csv files and makes appropriate links between objects |
 ---
 ## Test
-+ it was generated on number of corners cases for the allocation graph of the heap and its objects.
++ It was generated on number of corners cases for the allocation graph of the heap and its objects.
